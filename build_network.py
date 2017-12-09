@@ -49,7 +49,7 @@ from collections import defaultdict
 #         )
 #     )
 
-users_repos_f = open("users_repos.jsonl", "w")
+users_repos_f = open("data/users_repos.jsonl", "w")
 users_repos_forks = defaultdict(lambda:defaultdict(int))
 for line in sys.stdin:
     record = json.loads(line)
@@ -71,9 +71,9 @@ for user, repos_forks in users_repos_forks.items():
         )
 users_repos_f.close()
 
-users_f = open("users.jsonl", "w")
+users_f = open("data/users.jsonl", "w")
 repos_dict = defaultdict(int)
-repos_f = open("repos.jsonl", "w")
+repos_f = open("data/repos.jsonl", "w")
 for user, repos_forks in users_repos_forks.items():
     users_f.write(
         json.dumps(
