@@ -40,10 +40,10 @@ fork_events.saveAsTextFile("data/users_repos.jsonl")
 
 repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
 repos = repos.distinct()
-repos_lines = repos.map(lambda x: json.dumps(x))
+repos_lines = repos.map(lambda x: json.dumps(x, default=json_serialize))
 repos_lines.saveAsTextFile("data/repos.jsonl")
 
 users = fork_events.map(lambda x: frozendict({"user": x["user"]}))
 users = users.distinct()
-users_lines = users.map(lambda x: json.dumps(x))
+users_lines = users.map(lambda x: json.dumps(x, default=json_serialize))
 users_lines.saveAsTextFile("data/users.jsonl")
