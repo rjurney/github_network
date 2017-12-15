@@ -19,8 +19,22 @@ github_lines = sc.textFile("data/*.json.gz")
 # Apply the function to every record
 github_events = github_lines.map(json.loads)
 
-fork_events = github_events.map(lambda x: frozendict({"user": x["actor"]["login"], "repo": x["repo"]["name"]}))
-fork_events_lines = fork_events.map(lambda x: json.dumps(x))
+fork_events = github_events.map(
+    lambda x: frozendict(
+        {
+            "user": x["actor"]["login"] if "actor" in x and "login" in x["actor"] else None,
+            "repo": x["repo"]["name"] if "repo" in x and "name" in x["repo"] else None
+        }
+    )
+)
+fork_events.filter(lambda x: x["user"] is not None and x["repo"] is not None)
+
+def json_serialize(obj):
+    """Serialize objects as dicts instead of strings"""
+    if isinstance(obj, frozendict):
+        return dict(obj)
+
+fork_events_lines = fork_events.map(lambda x: json.dumps(x, default=json_serialize))
 fork_events.saveAsTextFile("data/users_repos.jsonl")
 
 repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
