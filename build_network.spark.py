@@ -14,12 +14,13 @@ except NameError as e:
     sc = pyspark.SparkContext()
     spark = pyspark.sql.SparkSession(sc).builder.appName("Extract Network").getOrCreate()
 
-github_lines = sc.textFile("data/*.json.gz")
+github_lines = sc.textFile("data/2017*.json.gz")
 
 # Apply the function to every record
 github_events = github_lines.map(json.loads)
+fork_events = github_events.filter(lambda x: "type" in x and x["type"] == "ForkEvent")
 
-fork_events = github_events.map(
+fork_events = fork_events.map(
     lambda x: frozendict(
         {
             "user": x["actor"]["login"] if "actor" in x and "login" in x["actor"] else None,
@@ -27,7 +28,7 @@ fork_events = github_events.map(
         }
     )
 )
-fork_events.filter(lambda x: x["user"] is not None and x["repo"] is not None)
+fork_events = fork_events.filter(lambda x: x["user"] is not None and x["repo"] is not None)
 
 def json_serialize(obj):
     """Serialize objects as dicts instead of strings"""
