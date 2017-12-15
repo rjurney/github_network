@@ -1,6 +1,19 @@
 import sys, os, json
 from frozendict import frozendict
 
+# If there is no SparkSession, create the environment
+try:
+    sc and spark
+except NameError as e:
+    import findspark
+    
+    findspark.init()
+    import pyspark
+    import pyspark.sql
+    
+    sc = pyspark.SparkContext()
+    spark = pyspark.sql.SparkSession(sc).builder.appName("Extract Network").getOrCreate()
+
 github_lines = sc.textFile("data/*.json.gz")
 
 # Apply the function to every record
