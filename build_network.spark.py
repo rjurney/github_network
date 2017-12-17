@@ -17,7 +17,18 @@ except NameError as e:
 github_lines = sc.textFile("data/2017*.json.gz")
 
 # Apply the function to every record
-github_events = github_lines.map(json.loads)
+def parse_json(line):
+    record = None
+    try:
+        record = json.loads(line)
+    except json.decode.JSONDecodeError as e:
+        sys.stderr.write(str(e))
+        record = {"error": "Parse error"}
+    return record
+
+github_events = github_lines.map(parse_json)
+github_events = github_events.filter(lambda x: "error" not in x)
+
 fork_events = github_events.filter(lambda x: "type" in x and x["type"] == "ForkEvent")
 
 fork_events = fork_events.map(
