@@ -21,7 +21,7 @@ def parse_json(line):
     record = None
     try:
         record = json.loads(line)
-    except json.decode.JSONDecodeError as e:
+    except json.JSONDecodeError as e:
         sys.stderr.write(str(e))
         record = {"error": "Parse error"}
     return record
