@@ -47,7 +47,7 @@ def json_serialize(obj):
         return dict(obj)
 
 fork_events_lines = fork_events.map(lambda x: json.dumps(x, default=json_serialize))
-fork_events.saveAsTextFile("data/users_repos.jsonl")
+fork_events_lines.saveAsTextFile("data/users_repos.jsonl")
 
 repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
 repos = repos.distinct()
