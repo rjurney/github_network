@@ -1,4 +1,10 @@
-graph = JanusGraphFactory.build().set("storage.backend", "berkeleyje").set("storage.directory", "data/graph").open();
+// Setup our database on top of berkeleydb (for now)
+graph = JanusGraphFactory.build()\
+  .set("storage.backend", "berkeleyje")\
+  .set("storage.directory", "data/fork_graph")\
+  .set("storage.batch-loading", true)\
+  .set("storage.buffer-size", 10000)\
+  .open();
 
 g = graph.traversal()
 
