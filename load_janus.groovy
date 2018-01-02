@@ -19,6 +19,9 @@ while((json = usersReader.readLine()) != null)
 
   v = graph.addVertex('user')
   v.property("userName", document.user)
+  graph.tx().commit()
+
+  print("U")
 }
 
 // Add repo nodes to graph
@@ -31,6 +34,9 @@ while((json = reposReader.readLine()) != null)
 
   v = graph.addVertex('repo')
   v.property("repoName", document.repo)
+  graph.tx().commit()
+
+  print("R")
 }
 
 // Get a graph traverser
@@ -49,6 +55,9 @@ while((json = edgesReader.readLine()) != null)
   repo = g.V().has('repoName', document.repo).next()
 
   user.addEdge("forked", repo)
+  graph.tx().commit()
+
+  print("-")
 }
 
 g.V().count()
