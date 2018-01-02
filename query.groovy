@@ -10,7 +10,7 @@ graph = JanusGraphFactory.build()\
 g = graph.traversal()
 
 // Get a network of users from the network of user -> repos
-repoRepoJson = new groovy.json.JsonBuilder(g.V().hasLabel('repo').as('repo1').in('forked').out('forked').where(neq('repo1')).as('repo2').select('repo1','repo2').by('projectName').dedup()).toPrettyString()
+repoRepoJson = new groovy.json.JsonBuilder(g.V().hasLabel('repo').as('repo1').in('forked').out('forked').where(neq('repo1')).as('repo2').select('repo1','repo2').by('repoName').dedup()).toPrettyString()
 
 /* g.V()\
   .hasLabel('repo')\
@@ -20,7 +20,7 @@ repoRepoJson = new groovy.json.JsonBuilder(g.V().hasLabel('repo').as('repo1').in
   .where(neq('repo1'))\
   .as('repo2')\
   .select('repo1','repo2')\
-  .by('projectName')\
+  .by('repoName')\
   .dedup(); */
 
 // Write out to a JSON File
