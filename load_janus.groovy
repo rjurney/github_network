@@ -60,4 +60,7 @@ while((json = edgesReader.readLine()) != null)
   print("-")
 }
 
-g.V().count()
+
+g.V().hasLabel('user').count()
+g.V().hasLabel('repo').count()
+g.E().count()
