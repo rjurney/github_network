@@ -25,6 +25,7 @@ mgmt.buildIndex('byRepoNameUnique', Vertex.class).addKey(repoName).unique().buil
 
 // Relationships
 forked = mgmt.makeEdgeLabel('forked').multiplicity(SIMPLE).make()
+co_forked = mgmt.makeEdgeLabel('co_forked').multiplicity(SIMPLE).make()
 
 // Commit changes
 mgmt.commit()
