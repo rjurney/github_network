@@ -15,9 +15,14 @@ mgmt = graph.openManagement()
 user = mgmt.makeVertexLabel('user').make()
 repo = mgmt.makeVertexLabel('repo').make()
 
-// Node properties
+// Identifier node properties
 userName = mgmt.makePropertyKey('userName').dataType(String.class).cardinality(Cardinality.SINGLE).make()
 repoName = mgmt.makePropertyKey('repoName').dataType(String.class).cardinality(Cardinality.SINGLE).make()
+
+// Metric node properties
+degreeCentrality = mgmt.makePropertyKey('degreeCentrality').dataType(Integer.class).make()
+eigenvectorCentrality = mgmt.makePropertyKey('eigenvectorCentrality').dataType(Integer.class).make()
+stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
 
 // Indexes
 mgmt.buildIndex('byUserNameUnique', Vertex.class).addKey(userName).unique().buildCompositeIndex()
@@ -26,6 +31,7 @@ mgmt.buildIndex('byRepoNameUnique', Vertex.class).addKey(repoName).unique().buil
 // Relationships
 forked = mgmt.makeEdgeLabel('forked').multiplicity(SIMPLE).make()
 co_forked = mgmt.makeEdgeLabel('co_forked').multiplicity(SIMPLE).make()
+starred = mgmt.makeEdgeLabel('starred').multiplicity(SIMPLE).make()
 
 // Commit changes
 mgmt.commit()
