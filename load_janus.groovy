@@ -42,11 +42,11 @@ while((json = reposReader.readLine()) != null)
 // Get a graph traverser
 g = graph.traversal()
 
-// Create edges between companies
-edgesFilename = "../data/users_repos.jsonl"
-edgesReader = new BufferedReader(new FileReader(edgesFilename));
+// Create forked edges between repos and nodes
+forkEdgesFilename = "../data/users_forked_repos.jsonl"
+forkEdgesReader = new BufferedReader(new FileReader(forkEdgesFilename));
 
-while((json = edgesReader.readLine()) != null)
+while((json = forkEdgesReader.readLine()) != null)
 {
   document = jsonSlurper.parseText(json)
 
@@ -60,7 +60,25 @@ while((json = edgesReader.readLine()) != null)
   print("-")
 }
 
+// Create starred edges between repos and nodes
+starEdgesFilename = "../data/users_starred_repos.jsonl"
+starEdgesReader = new BufferedReader(new FileReader(starEdgesFilename));
+
+while((json = starEdgesReader.readLine()) != null)
+{
+  document = jsonSlurper.parseText(json)
+
+  // Add edges to graph
+  user = g.V().has('userName', document.user).next()
+  repo = g.V().has('repoName', document.repo).next()
+
+  user.addEdge("starred", repo)
+  graph.tx().commit()
+
+  print("-")
+}
 
 g.V().hasLabel('user').count()
 g.V().hasLabel('repo').count()
-g.E().count()
+g.E('forked').count()
+g.E('starred').count()
