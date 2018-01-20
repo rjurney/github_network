@@ -81,12 +81,18 @@ fork_events_lines.saveAsTextFile("data/users_forked_repos.json")
 star_events_links = star_events.map(lambda x: json.dumps(x, default=json_serialize))
 star_events_links.saveAsTextFile("data/users_starred_repos.json")
 
-repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
+# We must get any repos appearing in either event type
+fork_repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
+star_repos = star_events.map(lambda x: frozendict({"repo": x["repo"]}))
+repos = sc.union([fork_repos, star_repos])
 repos = repos.distinct()
 repos_lines = repos.map(lambda x: json.dumps(x, default=json_serialize))
 repos_lines.saveAsTextFile("data/repos.json")
 
-users = fork_events.map(lambda x: frozendict({"user": x["user"]}))
+# We must get any users appearing in either event type
+fork_users = fork_events.map(lambda x: frozendict({"user": x["user"]}))
+star_users = star_events.map(lambda x: frozendict({"user": x["user"]}))
+users = sc.union([fork_users, star_users])
 users = users.distinct()
 users_lines = users.map(lambda x: json.dumps(x, default=json_serialize))
 users_lines.saveAsTextFile("data/users.json")
