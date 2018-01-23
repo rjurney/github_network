@@ -64,6 +64,7 @@ star_events = star_events.map(
         }
     )
 )
+star_events = star_events.filter(lambda x: x["user"] is not None and x["repo"] is not None)
 
 #
 # Serialize as JSON to disk: user-forked-repo and user-startted-repo links...
