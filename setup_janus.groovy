@@ -2,8 +2,6 @@
 graph = JanusGraphFactory.build()\
   .set("storage.backend", "berkeleyje")\
   .set("storage.directory", "data/fork_graph")\
-  .set("storage.batch-loading", true)\
-  .set("storage.buffer-size", 10000)\
   .open();
 
 g = graph.traversal()
@@ -20,8 +18,8 @@ userName = mgmt.makePropertyKey('userName').dataType(String.class).cardinality(C
 repoName = mgmt.makePropertyKey('repoName').dataType(String.class).cardinality(Cardinality.SINGLE).make()
 
 // Metric node properties
-degreeCentrality = mgmt.makePropertyKey('degreeCentrality').dataType(Integer.class).make()
-eigenvectorCentrality = mgmt.makePropertyKey('eigenvectorCentrality').dataType(Integer.class).make()
+degreeCentrality = mgmt.makePropertyKey('degree').dataType(Integer.class).make()
+eigenvectorCentrality = mgmt.makePropertyKey('eigen').dataType(Integer.class).make()
 stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
 
 // Indexes
