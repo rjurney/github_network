@@ -78,7 +78,17 @@ while((json = starEdgesReader.readLine()) != null)
   print("-")
 }
 
-g.V().hasLabel('user').count()
-g.V().hasLabel('repo').count()
-g.E('forked').count()
-g.E('starred').count()
+// Setup sessions so we can remember variables
+:remote connect tinkerpop.server conf/remote.yaml session
+
+userCount = g.V().hasLabel('user').count().next()
+assert(userCount == 4067599)
+
+repoCount = g.V().hasLabel('repo').count().next()
+assert(repoCount == 4071996)
+
+forkedCount = g.E().hasLabel('forked').count().next()
+assert(forkedCount == 11366334)
+
+starredCount = g.E().hasLabel('starred').count().next()
+assert(starredCount == 31870088)
