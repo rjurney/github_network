@@ -17,14 +17,14 @@ repo = mgmt.makeVertexLabel('repo').make()
 userName = mgmt.makePropertyKey('userName').dataType(String.class).cardinality(Cardinality.SINGLE).make()
 repoName = mgmt.makePropertyKey('repoName').dataType(String.class).cardinality(Cardinality.SINGLE).make()
 
+// Indexes
+mgmt.buildIndex('byUserNameUnique', Vertex.class).addKey(userName).unique().buildCompositeIndex()
+mgmt.buildIndex('byRepoNameUnique', Vertex.class).addKey(repoName).unique().buildCompositeIndex()
+
 // Metric node properties
 degreeCentrality = mgmt.makePropertyKey('degree').dataType(Integer.class).make()
 eigenvectorCentrality = mgmt.makePropertyKey('eigen').dataType(Integer.class).make()
 stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
-
-// Indexes
-mgmt.buildIndex('byUserNameUnique', Vertex.class).addKey(userName).unique().buildCompositeIndex()
-mgmt.buildIndex('byRepoNameUnique', Vertex.class).addKey(repoName).unique().buildCompositeIndex()
 
 // Relationships
 forked = mgmt.makeEdgeLabel('forked').multiplicity(SIMPLE).make()
