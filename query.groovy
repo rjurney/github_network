@@ -1,24 +1,13 @@
-// Setup our database on top of berkeleydb (for now)
-graph = JanusGraphFactory.build()\
-  .set("storage.backend", "berkeleyje")\
-  .set("storage.directory", "data/fork_graph")\
-  .set("storage.batch-loading", true)\
-  .set("storage.buffer-size", 1000)\
-  .open();
+// Setup our database on top of cassandra/elasticsearch
+graph = JanusGraphFactory.build().
+  set("storage.backend", "cassandra").
+  set("storage.hostname", "127.0.0.1").
+  set("storage.cassandra.keyspace", "github_graph").
+  set("index.search.backend", "elasticsearch").
+  open()
 
 // Get a graph traverser
 g = graph.traversal()
-
-// Add co-forked edges between nodes
-g.V().
-  hasLabel('repo').
-  store('x').
-  as('repo1').
-  in('forked').
-  out('forked').
-  where(without('x')).
-  as('repo2').
-  addE('co_forked').to('repo1')
 
 // Degree centrality of co_forked edges - never returns
 g.V().hasLabel('repo').group().by().by(bothE('co_forked').count())
@@ -46,10 +35,21 @@ g.V().hasLabel('repo').
       groupCount('m').
         by().
       out('co_forked').
-      timeLimit(10000)).
+      timeLimit(1000)).
     times(5).
   cap('m').
   unfold().as('kv').
   select(keys).
-    property('eigenvectorCentrality', select('kv').select(values))
+    property('eigen', select('kv').select(values))
 
+
+// Degree centrality
+olap_g.
+  V().
+  hasLabel('user').
+  group().
+  by().
+  by(bothE().count()).
+  label('count').
+  order().
+  by('count', decr)
