@@ -1,8 +1,10 @@
-// Setup our database on top of berkeleydb (for now)
-graph = JanusGraphFactory.build()\
-  .set("storage.backend", "berkeleyje")\
-  .set("storage.directory", "data/fork_graph")\
-  .open();
+// Setup our database on top of cassandra/elasticsearch
+graph = JanusGraphFactory.build().
+  set("storage.backend", "cassandra").
+  set("storage.hostname", "127.0.0.1").
+  set("storage.cassandra.keyspace", "github_graph").
+  set("index.search.backend", "elasticsearch").
+  open()
 
 g = graph.traversal()
 
@@ -30,6 +32,8 @@ stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
 forked = mgmt.makeEdgeLabel('forked').multiplicity(SIMPLE).make()
 co_forked = mgmt.makeEdgeLabel('co_forked').multiplicity(SIMPLE).make()
 starred = mgmt.makeEdgeLabel('starred').multiplicity(SIMPLE).make()
+owned = mgmt.makeEdgeLabel('owned').multiplicity(SIMPLE).make()
+fan = mgmt.makeEdgeLabel('fan').multiplicity(SIMPLE).make()
 
 // Commit changes
 mgmt.commit()
