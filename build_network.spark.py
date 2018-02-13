@@ -36,6 +36,7 @@ github_events = github_events.filter(lambda x: "error" not in x)
 
 # See https://developer.github.com/v3/activity/events/types/#forkevent
 fork_events = github_events.filter(lambda x: "type" in x and x["type"] == "ForkEvent")
+own_events = github_events.filter(lambda x: "type" in x and x["type"] == "ForkEvent")
 
 # See https://developer.github.com/v3/activity/events/types/#watchevent
 star_events = github_events.filter(lambda x: "type" in x and x["type"] == "WatchEvent")
@@ -66,6 +67,17 @@ star_events = star_events.map(
 )
 star_events = star_events.filter(lambda x: x["user"] is not None and x["repo"] is not None)
 
+own_events = own_events.filter(lambda x: "repo" in x and "name" in x["repo"] and "/" in x["repo"]["name"])
+own_events = own_events.map(
+    lambda x: frozendict(
+        {
+            "owner": x["repo"]["name"].split("/")[0] if "repo" in x and "name" in x["repo"] else None,
+            "repo": x["repo"]["name"] if "repo" in x and "name" in x["repo"] else None
+        }
+    )
+)
+own_events = own_events.filter(lambda x: x["owner"] is not None and x["repo"] is not None)
+
 #
 # Serialize as JSON to disk: user-forked-repo and user-startted-repo links...
 # as well as the repo and user entities themselves.
@@ -79,21 +91,26 @@ def json_serialize(obj):
 fork_events_lines = fork_events.map(lambda x: json.dumps(x, default=json_serialize))
 fork_events_lines.saveAsTextFile("data/users_forked_repos.json")
 
-star_events_links = star_events.map(lambda x: json.dumps(x, default=json_serialize))
-star_events_links.saveAsTextFile("data/users_starred_repos.json")
+star_events_lines = star_events.map(lambda x: json.dumps(x, default=json_serialize))
+star_events_lines.saveAsTextFile("data/users_starred_repos.json")
+
+own_events_lines = own_events.map(lambda x: json.dumps(x, default=json_serialize))
+own_events_lines.saveAsTextFile("data/users_owned_repos.json")
 
 # We must get any repos appearing in either event type
 fork_repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
+own_repos =  star_events.map(lambda x: frozendict({"repo": x["repo"]}))
 star_repos = star_events.map(lambda x: frozendict({"repo": x["repo"]}))
-repos = sc.union([fork_repos, star_repos])
+repos = sc.union([fork_repos, star_repos, own_repos])
 repos = repos.distinct()
 repos_lines = repos.map(lambda x: json.dumps(x, default=json_serialize))
 repos_lines.saveAsTextFile("data/repos.json")
 
 # We must get any users appearing in either event type
 fork_users = fork_events.map(lambda x: frozendict({"user": x["user"]}))
+own_users = own_events.map(lambda x: frozendict({"user": x["owner"]}))
 star_users = star_events.map(lambda x: frozendict({"user": x["user"]}))
-users = sc.union([fork_users, star_users])
+users = sc.union([fork_users, star_users, own_users])
 users = users.distinct()
 users_lines = users.map(lambda x: json.dumps(x, default=json_serialize))
 users_lines.saveAsTextFile("data/users.json")
