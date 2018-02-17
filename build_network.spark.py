@@ -94,6 +94,7 @@ fork_events_lines.saveAsTextFile("data/users_forked_repos.json")
 star_events_lines = star_events.map(lambda x: json.dumps(x, default=json_serialize))
 star_events_lines.saveAsTextFile("data/users_starred_repos.json")
 
+own_events = own_events.distinct()
 own_events_lines = own_events.map(lambda x: json.dumps(x, default=json_serialize))
 own_events_lines.saveAsTextFile("data/users_owned_repos.json")
 
