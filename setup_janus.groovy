@@ -24,8 +24,9 @@ mgmt.buildIndex('byUserNameUnique', Vertex.class).addKey(userName).unique().buil
 mgmt.buildIndex('byRepoNameUnique', Vertex.class).addKey(repoName).unique().buildCompositeIndex()
 
 // Metric node properties
-degreeCentrality = mgmt.makePropertyKey('degree').dataType(Integer.class).make()
-eigenvectorCentrality = mgmt.makePropertyKey('eigen').dataType(Integer.class).make()
+fanDegreeCentrality = mgmt.makePropertyKey('fan_degree').dataType(Integer.class).make()
+fanEigenvectorCentrality = mgmt.makePropertyKey('fan_eigen').dataType(Integer.class).make()
+coforkEigenvectorCentrality = mgmt.makePropertyKey('co_fork_eigen').dataType(Integer.class).make()
 stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
 
 // Relationships
@@ -37,3 +38,6 @@ fan = mgmt.makeEdgeLabel('fan').multiplicity(SIMPLE).make()
 
 // Commit changes
 mgmt.commit()
+
+// Close graph
+graph.close()
