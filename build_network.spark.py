@@ -100,7 +100,7 @@ own_events_lines.saveAsTextFile("data/users_owned_repos.json")
 
 # We must get any repos appearing in either event type
 fork_repos = fork_events.map(lambda x: frozendict({"repo": x["repo"]}))
-own_repos =  star_events.map(lambda x: frozendict({"repo": x["repo"]}))
+own_repos  = star_events.map(lambda x: frozendict({"repo": x["repo"]}))
 star_repos = star_events.map(lambda x: frozendict({"repo": x["repo"]}))
 repos = sc.union([fork_repos, star_repos, own_repos])
 repos = repos.distinct()
@@ -109,7 +109,7 @@ repos_lines.saveAsTextFile("data/repos.json")
 
 # We must get any users appearing in either event type
 fork_users = fork_events.map(lambda x: frozendict({"user": x["user"]}))
-own_users = own_events.map(lambda x: frozendict({"user": x["owner"]}))
+own_users  =  own_events.map(lambda x: frozendict({"user": x["owner"]}))
 star_users = star_events.map(lambda x: frozendict({"user": x["user"]}))
 users = sc.union([fork_users, star_users, own_users])
 users = users.distinct()
