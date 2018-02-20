@@ -26,19 +26,20 @@ g = graph.traversal()
 //
 count = 0
 
-g.V().\
-  hasLabel('repo').\
-  .where()
-  as('repo1').\
-  in('forked').\
-  out('forked').\
-  where(neq('repo1')).\
-  as('repo2').\
-  addE('co_forked').\
- to('repo1').choose(
+g.V().
+  hasLabel('repo').
+  as('repo1').
+  in('forked').
+  out('forked').
+  where(neq('repo1')).
+  as('repo2').
+  addE('co_forked').
+  to('repo1').
+  choose(
     filter{it->count+=1; count%1000 == 0},
     __.map{it->println(count); g.tx().commit(); it.get()},
-    __.identity())
+    __.identity()
+  )
 
 //
 // Manual iteration
@@ -178,3 +179,52 @@ for(edgePair : egdePairs) {
 
   print("-")
 }
+
+// Limit co-forking by centrality filters
+g.V().
+  hasLabel('user').
+  as('user1').
+  out('owned').
+  in('forked').
+  as('user2').
+  addE('fan').
+  to('user1').
+  choose(
+      filter{it->count+=1; count%1000 == 0},
+      __.map{it->println(count); g.tx().commit(); it.get()},
+      __.identity()
+  ).
+  iterate()
+
+g.V().
+  hasLabel('repo').
+  as('repo1').
+  in('forked').
+  has('fan_eigen').
+  where(
+    outE('forked').
+      count().
+      is(
+        lt(50)
+      )
+  ).
+  out('forked').
+  where(neq('repo1')).
+  as('repo2').
+  addE('co_forked').
+  to('repo1').
+  choose(
+    filter{it->count+=1; count%1000 == 0},
+    __.map{it->println(count); g.tx().commit(); it.get()},
+    __.identity()
+  ).
+  iterate()
+
+g.V().
+
+
+g.V().
+  has(
+    'user',
+    'fan_eigen'
+  ).
