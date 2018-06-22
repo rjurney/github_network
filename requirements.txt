@@ -1,2 +1,7 @@
 findspark
 frozendict
+selenium
+bs4
+nltk
+keras
+scikit-learn
