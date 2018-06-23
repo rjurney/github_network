@@ -5,3 +5,4 @@ bs4
 nltk
 keras
 scikit-learn
+prettytable
