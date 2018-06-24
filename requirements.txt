@@ -6,3 +6,5 @@ nltk
 keras
 scikit-learn
 prettytable
+pygithub
+
