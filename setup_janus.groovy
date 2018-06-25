@@ -34,6 +34,7 @@ stars = mgmt.makePropertyKey('stars').dataType(Integer.class).make()
 // Relationships
 forked = mgmt.makeEdgeLabel('forked').multiplicity(SIMPLE).make()
 co_forked = mgmt.makeEdgeLabel('co_forked').multiplicity(SIMPLE).make()
+co_forked_two = mgmt.makeEdgeLabel('co_forked_2').multiplicity(SIMPLE).make()
 starred = mgmt.makeEdgeLabel('starred').multiplicity(SIMPLE).make()
 owned = mgmt.makeEdgeLabel('owned').multiplicity(SIMPLE).make()
 fan = mgmt.makeEdgeLabel('fan').multiplicity(SIMPLE).make()
