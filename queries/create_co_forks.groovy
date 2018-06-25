@@ -10,23 +10,31 @@ graph = JanusGraphFactory.build().
 
 g = graph.traversal()
 
-// Compute co_forked edges
+// re-ompute co_forked edges
+g.E().hasLabel('co_forked').drop()
+
+count = 0
+
 g.V().
   hasLabel('repo').
   as('repo1').
   in('forked').
-  has('fan_eigen').
+  has(
+    'user',
+    'fan_degree',
+    gt(5)
+  ).
   where(
     outE('forked').
       count().
       is(
-        lt(50)
+        lt(60)
       )
   ).
   out('forked').
   where(neq('repo1')).
   as('repo2').
-  addE('co_forked').
+  addE('co_forked_2').
   to('repo1').
   choose(
     filter{it->count+=1; count%1000 == 0},
@@ -34,3 +42,7 @@ g.V().
     __.identity()
   ).
   iterate()
+
+println(count)
+
+  
