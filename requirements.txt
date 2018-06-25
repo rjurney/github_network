@@ -8,3 +8,4 @@ scikit-learn
 prettytable
 pygithub
 
+jsonlines
