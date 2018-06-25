@@ -1,28 +1,21 @@
 import sys, os, re
 import json
-import numpy as np
 import math
+import random
+
+FILE_NAME = "data/repos_sample_2_0.01.jsonl"
+SAMPLE_RATIO = 0.01
 
 with open("data/repos.jsonl") as f:
   records = [json.loads(x) for x in f]
 
 count = len(records)
-sample_ratio = 0.01
-sample_count = math.ceil(count * sample_ratio)
-
-sample_indexes = np.random.choice(
-  count,
-  sample_count
-)
-
-sample_records = []
-for sample_index in sample_indexes:
-  sample_record = records[sample_index]
-  sample_records.append(sample_record)
+sample_count = math.ceil(count * SAMPLE_RATIO)
+sample_records = random.sample(records, sample_count)
 
 assert len(sample_records) == sample_count
 
-with open("data/repos_sample_0.01.jsonl", "w") as f:
+with open(FILE_NAME, "w") as f:
   for record in sample_records:
     f.write(json.dumps(record) + "\n")
 
