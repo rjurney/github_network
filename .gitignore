@@ -2,3 +2,5 @@
 data
 janusgraph-0.2.0-hadoop2
 *.log
+gist
+lib/chromedriver
