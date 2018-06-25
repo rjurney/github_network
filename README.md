@@ -44,3 +44,16 @@ You can setup the database using [`setup_janus.groovy`](setup_janus.groovy). Nex
 
 Now you're ready to query!
 
+## Classifying Projects Dataflow
+
+1. Sample the repositories with [sample_repos.py](sample_repos.py)
+
+2. Scrape the repos with [scrape_github.py](scrape_github.py) (experimental only!)
+
+3. Extract the README content with [tokenize_pages.py](tokenize_pages.py)
+
+4. Build a Keras model for the text - see  [notebooks/First Repo Classifier Experiment.ipynb](notebooks/First Repo Classifier Experiment.ipynb)
+
+5. Go back and enrich data further using the Github API - see [hit_github_api.py](hit_github_api.py)
+
+
