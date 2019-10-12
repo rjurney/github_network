@@ -56,7 +56,12 @@ def fetch_github_api(records, i=0):
         'subscribers': repo.subscribers_count,
         'watchers': repo.watchers_count
       }
-      doc.update(record) # add repo/is_edu/readme_words
+
+      # Fetch the languages of the project
+      # record.languages_url
+
+      # combine/add repo/is_edu/readme_words
+      doc.update(record) 
 
       docs.append(doc)
       i += 1

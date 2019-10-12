@@ -53,3 +53,13 @@ olap_g.
   label('count').
   order().
   by('count', decr)
+
+// Degree centrality
+g.
+  V().
+  group().
+  by().
+  by(bothE().count()).
+  label('count').
+  order().
+  by('count', decr)

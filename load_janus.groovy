@@ -157,3 +157,113 @@ assert(ownedCount == 2263684)
 
 // Close graph
 graph.close()
+
+
+
+
+// Libraries.io Graph
+graph = JanusGraphFactory.build().
+  set("storage.backend", "cassandra").
+  set("storage.hostname", "127.0.0.1").
+  set("storage.cassandra.keyspace", "libraries_graph").
+  set("storage.batch-loading", true).
+  set("storage.buffer-size", 10000).
+  set("index.search.backend", "elasticsearch").
+  open()
+
+g = graph.traversal()
+
+jsonSlurper = new JsonSlurper()
+import java.text.NumberFormat;
+
+projectsFilename = "../github_network/data/maven_projects.jsonl"
+projectsReader = new BufferedReader(new FileReader(projectsFilename));
+
+while((json = projectsReader.readLine()) != null)
+{
+  document = jsonSlurper.parseText(json)
+
+  v = graph.addVertex('project')
+  v.property('name', document['Project'])
+}
+graph.tx().commit()
+
+
+// Create fan edges between users and other users
+depsEdgesFilename = "../github_network/data/maven_dependencies.jsonl"
+depsEdgesReader = new BufferedReader(new FileReader(depsEdgesFilename));
+
+i=0
+while((json = depsEdgesReader.readLine()) != null)
+{
+  document = jsonSlurper.parseText(json)
+
+  // Fetch the user and repo
+  project1 = g.V().has('name', document['Project']).next()
+  project2 = g.V().has('name', document['Dependency']).next()
+
+  project1.addEdge('depends', project2)
+
+  if(i % 1000 == 0) {
+    graph.tx().commit()
+    str = NumberFormat.getIntegerInstance().format(i)
+    println(str + "E")
+  }
+  i++
+}
+graph.tx().commit()
+
+
+
+
+// Libraries.io Graph
+graph = JanusGraphFactory.build().
+  set("storage.backend", "cassandra").
+  set("storage.hostname", "127.0.0.1").
+  set("storage.cassandra.keyspace", "libraries_graph").
+  set("storage.batch-loading", true).
+  set("storage.buffer-size", 10000).
+  set("index.search.backend", "elasticsearch").
+  open()
+
+g = graph.traversal()
+
+jsonSlurper = new JsonSlurper()
+import java.text.NumberFormat;
+
+projectsFilename = "../data/pypi_projects.jsonl"
+projectsReader = new BufferedReader(new FileReader(projectsFilename));
+
+while((json = projectsReader.readLine()) != null)
+{
+  document = jsonSlurper.parseText(json)
+
+  v = graph.addVertex('project')
+  v.property('name', document['Name'])
+}
+graph.tx().commit()
+
+
+// Create fan edges between users and other users
+depsEdgesFilename = "../data/pypi_dependencies.jsonl"
+depsEdgesReader = new BufferedReader(new FileReader(depsEdgesFilename));
+
+i=0
+while((json = depsEdgesReader.readLine()) != null)
+{
+  document = jsonSlurper.parseText(json)
+
+  // Fetch the user and repo
+  project1 = g.V().has('name', document['Project']).next()
+  project2 = g.V().has('name', document['Dependency']).next()
+
+  project1.addEdge('depends', project2)
+
+  if(i % 1000 == 0) {
+    graph.tx().commit()
+    str = NumberFormat.getIntegerInstance().format(i)
+    println(str + "E")
+  }
+  i++
+}
+graph.tx().commit()
