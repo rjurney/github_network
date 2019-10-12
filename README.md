@@ -52,8 +52,11 @@ Now you're ready to query!
 
 3. Extract the README content with [tokenize_pages.py](tokenize_pages.py)
 
-4. Build a Keras model for the text - see  [notebooks/First Repo Classifier Experiment.ipynb](notebooks/First Repo Classifier Experiment.ipynb)
+4. Go back and enrich data further using the Github API - see [hit_github_api.py](hit_github_api.py)
 
-5. Go back and enrich data further using the Github API - see [hit_github_api.py](hit_github_api.py)
+5. Process the enriched records into something easily loaded by Keras with [process_enriched_github.py](process_enriched_github.py)
+
+6 (originally 4). Build a Keras model for the text - see  [notebooks/First Repo Classifier Experiment.ipynb](notebooks/First Repo Classifier Experiment.ipynb)
+
 
 
